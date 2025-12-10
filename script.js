@@ -1,4 +1,4 @@
-// Reveal on scroll animations
+// Reveal on scroll animations: menambahkan class .show saat elemen masuk viewport
 const observer = new IntersectionObserver(
   entries => {
     entries.forEach(entry => {
@@ -12,7 +12,7 @@ const observer = new IntersectionObserver(
 
 document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-// FAQ accordion
+// FAQ accordion: toggle class .open pada item yang diklik
 document.querySelectorAll('[data-faq-toggle]').forEach(toggle => {
   toggle.addEventListener('click', () => {
     const parent = toggle.closest('[data-faq]');
