@@ -189,8 +189,26 @@
                 <h2>Produk unggulan</h2>
                 <a class="text-link" href="#">Lihat semua -></a>
             </div>
+            <div class="filter-bar fade-up">
+                <div>
+                    <small class="muted">Filter per kategori</small>
+                </div>
+                <div class="filter-pills" role="tablist">
+                    <button class="filter-pill active" data-filter="all" aria-pressed="true">Semua</button>
+                    <button class="filter-pill" data-filter="motherboard" aria-pressed="false">Motherboard</button>
+                    <button class="filter-pill" data-filter="cpu" aria-pressed="false">CPU</button>
+                    <button class="filter-pill" data-filter="ram" aria-pressed="false">RAM</button>
+                    <button class="filter-pill" data-filter="gpu" aria-pressed="false">GPU</button>
+                    <button class="filter-pill" data-filter="storage" aria-pressed="false">Storage</button>
+                    <button class="filter-pill" data-filter="cooling" aria-pressed="false">Cooling</button>
+                    <button class="filter-pill" data-filter="psu" aria-pressed="false">PSU</button>
+                    <button class="filter-pill" data-filter="peripheral" aria-pressed="false">Peripheral</button>
+                    <button class="filter-pill" data-filter="monitor" aria-pressed="false">Monitor</button>
+                    <button class="filter-pill" data-filter="accessory" aria-pressed="false">Aksesori</button>
+                </div>
+            </div>
             <div class="grid products-grid">
-                <div class="product fade-up">
+                <div class="product fade-up" data-category="motherboard">
                     <div class="product-thumb">
                         <img src="assets/mobo.jpeg" alt="Motherboard B650 WiFi" loading="lazy" />
                     </div>
@@ -199,7 +217,7 @@
                     <small>Socket AM4 - DDR4</small>
                     <button class="btn">Tambah ke keranjang</button>
                 </div>
-                <div class="product fade-up">
+                <div class="product fade-up" data-category="ram">
                     <div class="product-thumb">
                         <img src="assets/Ram.jpeg" alt="DDR5 32GB 6000MHz" loading="lazy" />
                     </div>
@@ -208,7 +226,7 @@
                     <small>Dual channel kit - RGB</small>
                     <button class="btn">Tambah ke keranjang</button>
                 </div>
-                <div class="product fade-up">
+                <div class="product fade-up" data-category="psu">
                     <div class="product-thumb">
                         <img src="assets/psu.jpeg" alt="PSU 750W 80+ Gold" loading="lazy" />
                     </div>
@@ -217,7 +235,7 @@
                     <small>Modular - 10 tahun garansi</small>
                     <button class="btn">Tambah ke keranjang</button>
                 </div>
-                <div class="product fade-up">
+                <div class="product fade-up" data-category="cooling">
                     <div class="product-thumb">
                         <img src="assets/aio cooler.jpeg" alt="AIO Liquid Cooler 360mm" loading="lazy" />
                     </div>
@@ -226,7 +244,7 @@
                     <small>ARGB - Pump gen4</small>
                     <button class="btn">Tambah ke keranjang</button>
                 </div>
-                <div class="product fade-up">
+                <div class="product fade-up" data-category="gpu">
                     <div class="product-thumb">
                         <img src="assets/GPU.jpeg" alt="NVIDIA RTX 5090" loading="lazy" />
                     </div>
@@ -235,7 +253,7 @@
                     <small>32GB GDDR7 - Quad Fan Cooling</small>
                     <button class="btn">Tambah ke keranjang</button>
                 </div>
-                <div class="product fade-up">
+                <div class="product fade-up" data-category="cpu">
                     <div class="product-thumb">
                         <img src="assets/cpu.jpeg" alt="Ryzen 5 5600g" loading="lazy" />
                     </div>
@@ -244,7 +262,7 @@
                     <small>6 Cores 12 Threads - 4.4 GHZ</small>
                     <button class="btn">Tambah ke keranjang</button>
                 </div>
-                <div class="product fade-up">
+                <div class="product fade-up" data-category="storage">
                     <div class="product-thumb">
                         <img src="assets/ssd.png" alt="SSD 1TB" loading="lazy" />
                     </div>
@@ -253,7 +271,7 @@
                     <small>600 TBW - Gen 4</small>
                     <button class="btn">Tambah ke keranjang</button>
                 </div>
-                <div class="product fade-up">
+                <div class="product fade-up" data-category="cooling">
                     <div class="product-thumb">
                         <img src="assets/fan case.jpg" alt="Fan Case" loading="lazy" />
                     </div>
@@ -262,7 +280,7 @@
                     <small>Use Magnet - ARGB</small>
                     <button class="btn">Tambah ke keranjang</button>
                 </div>
-                <div class="product fade-up">
+                <div class="product fade-up" data-category="peripheral">
                     <div class="product-thumb">
                         <img src="assets/keyboard.jpg" alt="Keyboard" loading="lazy" />
                     </div>
@@ -271,16 +289,16 @@
                     <small>Limited Edition - IP57</small>
                     <button class="btn">Tambah ke keranjang</button>
                 </div>
-                <div class="product fade-up">
+                <div class="product fade-up" data-category="monitor">
                     <div class="product-thumb">
                         <img src="assets/Monitor.jpg" alt="Monitor" loading="lazy" />
                     </div>
-                    <strong>Keyboard</strong>
+                    <strong>Monitor 27" 270Hz</strong>
                     <div class="price">Rp 17.389.000</div>
                     <small>270 Hz - DCI P-3 97%</small>
                     <button class="btn">Tambah ke keranjang</button>
                 </div>
-                <div class="product fade-up">
+                <div class="product fade-up" data-category="accessory">
                     <div class="product-thumb">
                         <img src="assets/DeksMat.jpeg" alt="DeksMat" loading="lazy" />
                     </div>
@@ -289,7 +307,7 @@
                     <small>Rubber bottom - Water-proof surface</small>
                     <button class="btn">Tambah ke keranjang</button>
                 </div>
-                <div class="product fade-up">
+                <div class="product fade-up" data-category="peripheral">
                     <div class="product-thumb">
                         <img src="assets/Mouse.jpeg" alt="Mouse" loading="lazy" />
                     </div>
