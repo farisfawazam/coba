@@ -39,26 +39,76 @@ const products = productCards.map((card, idx) => {
   card.dataset.productId = id;
   const addBtn = card.querySelector('.btn');
   if (addBtn) addBtn.dataset.addToCart = id;
-  return { id, title, priceText, price, desc, img, alt, category };
+  const searchText = `${title} ${desc}`.toLowerCase();
+  return { id, title, priceText, price, desc, img, alt, category, searchText };
 });
 
-// Filter produk per kategori
+const productGrid = document.querySelector('.products-grid');
+const productMap = new Map();
+productCards.forEach(card => {
+  const id = card.dataset.productId;
+  if (id) productMap.set(id, card);
+});
+
+// State filter/sort
+let activeCategory = 'all';
+let searchQuery = '';
+let sortMode = 'default';
+
+// Filter produk per kategori + pencarian + sorting
 const filterButtons = document.querySelectorAll('[data-filter]');
+const searchInput = document.querySelector('[data-search-input]');
+const sortSelect = document.querySelector('[data-sort]');
+
+const applyFiltersAndSort = () => {
+  const filtered = products
+    .filter(p => {
+      const categoryMatch = activeCategory === 'all' || p.category === activeCategory;
+      const searchMatch = !searchQuery || p.searchText.includes(searchQuery);
+      return categoryMatch && searchMatch;
+    })
+    .sort((a, b) => {
+      if (sortMode === 'price-asc') return a.price - b.price;
+      if (sortMode === 'price-desc') return b.price - a.price;
+      if (sortMode === 'name-asc') return a.title.localeCompare(b.title);
+      return 0;
+    });
+
+  products.forEach(p => {
+    const card = productMap.get(p.id);
+    const matched = filtered.some(f => f.id === p.id);
+    card?.classList.toggle('hide', !matched);
+  });
+
+  // Reorder DOM sesuai hasil sorting yang terfilter
+  if (productGrid) {
+    filtered.forEach(p => {
+      const card = productMap.get(p.id);
+      if (card) productGrid.appendChild(card);
+    });
+  }
+};
 
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
-    const filter = btn.dataset.filter;
+    activeCategory = btn.dataset.filter || 'all';
     filterButtons.forEach(button => {
       const isActive = button === btn;
       button.classList.toggle('active', isActive);
       button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
-
-    productCards.forEach(card => {
-      const matches = filter === 'all' || card.dataset.category === filter;
-      card.classList.toggle('hide', !matches);
-    });
+    applyFiltersAndSort();
   });
+});
+
+searchInput?.addEventListener('input', evt => {
+  searchQuery = evt.target.value.trim().toLowerCase();
+  applyFiltersAndSort();
+});
+
+sortSelect?.addEventListener('change', evt => {
+  sortMode = evt.target.value;
+  applyFiltersAndSort();
 });
 
 // Link "Lihat semua" sebagai reset filter
@@ -68,10 +118,32 @@ if (showAllLink) {
     evt.preventDefault();
     const allBtn = document.querySelector('[data-filter="all"]');
     if (allBtn) allBtn.click();
+    if (searchInput) {
+      searchInput.value = '';
+      searchQuery = '';
+    }
+    if (sortSelect) {
+      sortSelect.value = 'default';
+      sortMode = 'default';
+    }
+    applyFiltersAndSort();
     const grid = document.querySelector('.products-grid');
     if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 }
+
+// Util toast notification ringan
+const toastContainer = document.createElement('div');
+toastContainer.className = 'toast-container';
+document.body.appendChild(toastContainer);
+
+const showToast = (message, type = 'success') => {
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  toastContainer.appendChild(toast);
+  setTimeout(() => toast.remove(), 2600);
+};
 
 // Util format Rupiah
 const formatCurrency = value => `Rp ${value.toLocaleString('id-ID')}`;
@@ -101,6 +173,10 @@ const cartTotalEl = document.querySelector('[data-cart-total]');
 const cartCountEl = document.querySelector('[data-cart-count]');
 const checkoutBtn = document.querySelector('[data-checkout]');
 const paymentSelect = document.querySelector('[data-payment]');
+const cartSummary = document.querySelector('.cart-summary');
+const checkoutError = document.createElement('div');
+checkoutError.className = 'form-error';
+cartSummary?.appendChild(checkoutError);
 
 const updateCartCount = () => {
   const count = cart.reduce((acc, item) => acc + item.qty, 0);
@@ -165,6 +241,7 @@ const addToCart = id => {
   saveCart();
   renderCart();
   openCart();
+  showToast(`${product.title} ditambahkan ke keranjang`);
 };
 
 const changeQty = (id, delta) => {
@@ -209,19 +286,83 @@ cartItemsEl?.addEventListener('click', evt => {
 });
 
 checkoutBtn?.addEventListener('click', () => {
+  checkoutError.textContent = '';
   if (!cart.length) {
-    alert('Keranjang masih kosong.');
+    checkoutError.textContent = 'Keranjang masih kosong.';
+    showToast('Keranjang masih kosong.', 'error');
     return;
   }
   const total = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
   const method = paymentSelect?.value || 'transfer';
-  alert(
-    `Checkout disiapkan.\nItems: ${cart.length}\nTotal: ${formatCurrency(
-      total
-    )}\nMetode: ${method.toUpperCase()}\n(Lanjutkan ke halaman pembayaran.)`
+  if (!method) {
+    checkoutError.textContent = 'Pilih metode pembayaran.';
+    showToast('Pilih metode pembayaran.', 'error');
+    return;
+  }
+  checkoutError.textContent = '';
+  showToast(
+    `Checkout siap: ${cart.length} item, total ${formatCurrency(total)}, bayar ${method.toUpperCase()}`
   );
 });
 
 // Init cart
 loadCart();
 renderCart();
+
+// Wishlist ringan (tersimpan di localStorage)
+const WISHLIST_KEY = 'sparxparts_wishlist';
+let wishlist = new Set();
+
+const loadWishlist = () => {
+  try {
+    const raw = localStorage.getItem(WISHLIST_KEY);
+    wishlist = new Set(raw ? JSON.parse(raw) : []);
+  } catch {
+    wishlist = new Set();
+  }
+};
+
+const saveWishlist = () => localStorage.setItem(WISHLIST_KEY, JSON.stringify([...wishlist]));
+
+const syncWishlistUI = () => {
+  productCards.forEach(card => {
+    const id = card.dataset.productId;
+    const btn = card.querySelector('[data-wishlist]');
+    const active = id && wishlist.has(id);
+    if (btn) {
+      btn.classList.toggle('active', !!active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    }
+  });
+};
+
+productCards.forEach(card => {
+  const id = card.dataset.productId;
+  const wishBtn = document.createElement('button');
+  wishBtn.className = 'wishlist-btn';
+  wishBtn.type = 'button';
+  wishBtn.innerHTML = '❤';
+  wishBtn.dataset.wishlist = id || '';
+  wishBtn.setAttribute('aria-label', 'Tambah ke wishlist');
+  card.appendChild(wishBtn);
+});
+
+document.addEventListener('click', evt => {
+  const wishBtn = evt.target.closest('[data-wishlist]');
+  if (!wishBtn) return;
+  const id = wishBtn.dataset.wishlist;
+  if (!id) return;
+  if (wishlist.has(id)) {
+    wishlist.delete(id);
+    showToast('Dihapus dari wishlist', 'error');
+  } else {
+    wishlist.add(id);
+    showToast('Ditambahkan ke wishlist');
+  }
+  saveWishlist();
+  syncWishlistUI();
+});
+
+loadWishlist();
+syncWishlistUI();
+applyFiltersAndSort();

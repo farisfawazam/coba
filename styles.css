@@ -311,6 +311,30 @@ h2 {
   box-shadow: var(--shadow);
 }
 
+.filter-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-controls input[type="search"],
+.filter-controls select {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 10px 12px;
+  min-width: 180px;
+}
+
 .filter-pills {
   display: flex;
   flex-wrap: wrap;
@@ -519,6 +543,7 @@ h2 {
 }
 
 .product {
+  position: relative;
   background: var(--panel);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius);
@@ -547,6 +572,28 @@ h2 {
 .product:hover {
   transform: translateY(-4px);
   border-color: rgba(55, 216, 167, 0.4);
+}
+
+.wishlist-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--muted);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: 0.2s ease;
+}
+
+.wishlist-btn.active {
+  color: var(--accent-2);
+  border-color: rgba(124, 58, 237, 0.4);
+  background: rgba(124, 58, 237, 0.12);
 }
 
 .product .price {
@@ -815,7 +862,50 @@ footer {
   padding: 10px 12px;
 }
 
+.form-error {
+  color: #ffc4c4;
+  font-size: 13px;
+}
+
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: grid;
+  gap: 8px;
+  z-index: 50;
+}
+
+.toast {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.85);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  min-width: 240px;
+}
+
+.toast.success {
+  border-color: rgba(55, 216, 167, 0.5);
+}
+
+.toast.error {
+  border-color: rgba(255, 80, 80, 0.7);
+}
+
 @media (max-width: 720px) {
+  .filter-controls {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .filter-controls input[type="search"],
+  .filter-controls select {
+    width: 100%;
+    min-width: 0;
+  }
+
   .cart-panel {
     width: 100%;
   }

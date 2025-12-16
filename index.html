@@ -24,7 +24,6 @@
                 <li><a href="#kontak">Kontak</a></li>
             </ul>
             <div class="nav-actions">
-                <button class="btn ghost">Cari Sparepart</button>
                 <button class="btn cart-trigger" data-cart-toggle aria-expanded="false">
                     Keranjang
                     <span class="cart-count" data-cart-count>0</span>
@@ -196,8 +195,19 @@
                 <a class="text-link" href="#">Lihat semua -></a>
             </div>
             <div class="filter-bar fade-up">
-                <div>
-                    <small class="muted">Filter per kategori</small>
+                <div class="filter-top">
+                    <div>
+                        <small class="muted">Filter per kategori</small>
+                    </div>
+                    <div class="filter-controls">
+                        <input type="search" placeholder="Cari produk..." data-search-input aria-label="Cari produk" />
+                        <select data-sort aria-label="Urutkan produk">
+                            <option value="default">Urutkan</option>
+                            <option value="price-asc">Harga termurah</option>
+                            <option value="price-desc">Harga termahal</option>
+                            <option value="name-asc">Nama A-Z</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="filter-pills" role="tablist">
                     <button class="filter-pill active" data-filter="all" aria-pressed="true">Semua</button>
