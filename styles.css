@@ -143,6 +143,13 @@ nav a:hover {
   gap: 6px;
 }
 
+.cart-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--text);
+  filter: drop-shadow(0 0 8px rgba(55, 216, 167, 0.35));
+}
+
 .cart-count {
   background: rgba(55, 216, 167, 0.2);
   color: var(--accent);
