@@ -153,6 +153,8 @@ const formatCurrency = (value) => `Rp ${value.toLocaleString("id-ID")}`;
 // State keranjang
 const CART_KEY = "sparxparts_cart";
 const PROMO_KEY = "sparxparts_promo";
+const CHECKOUT_KEY = "sparxparts_checkout";
+const OPEN_CART_KEY = "sparxparts_open_cart";
 let cart = [];
 let activePromoCode = "";
 let lastTotals = {
@@ -480,17 +482,32 @@ checkoutBtn?.addEventListener("click", () => {
     return;
   }
   checkoutError.textContent = "";
-  const promoText = activePromoCode ? activePromoCode : "Tidak ada";
-  const summary = [
-    `Subtotal: ${formatCurrency(subtotal)}`,
-    `Diskon: - ${formatCurrency(discount)}`,
-    `Ongkir: ${formatCurrency(shipping)}`,
-    `Biaya admin (${method}): ${formatCurrency(adminFee)}`,
-    `Total akhir: ${formatCurrency(grand)}`,
-    `Promo: ${promoText}`,
-  ].join("\n");
-  showToast("Checkout siap, detail terkirim.", "success");
-  alert(`Ringkasan checkout:\n${summary}`);
+  const payload = {
+    items: cart.map((item) => ({
+      title: item.title,
+      qty: item.qty,
+      price: item.price,
+      subtotal: item.price * item.qty,
+      img: item.img,
+      alt: item.alt,
+      desc: item.desc,
+    })),
+    subtotal,
+    discount,
+    shipping,
+    adminFee,
+    paymentMethod: method,
+    promoCode: activePromoCode || "",
+    total: grand,
+    timestamp: Date.now(),
+  };
+  try {
+    localStorage.setItem(CHECKOUT_KEY, JSON.stringify(payload));
+  } catch (e) {
+    console.warn("Gagal menyimpan checkout:", e);
+  }
+  showToast("Checkout siap, membuka halaman pembayaran...", "success");
+  window.location.href = "checkout.html";
 });
 
 paymentSelect?.addEventListener("change", calculateTotals);
@@ -516,6 +533,17 @@ if (activePromoCode && promoRemoveBtn)
   promoRemoveBtn.style.display = "inline-flex";
 resetPromoUI();
 renderCart();
+
+// Buka panel cart jika diminta (contoh dari halaman checkout)
+try {
+  const openFlag = localStorage.getItem(OPEN_CART_KEY);
+  if (openFlag === "true") {
+    localStorage.removeItem(OPEN_CART_KEY);
+    openCart();
+  }
+} catch (e) {
+  console.warn("Gagal membaca flag open cart", e);
+}
 
 // Wishlist ringan (tersimpan di localStorage)
 const WISHLIST_KEY = "sparxparts_wishlist";

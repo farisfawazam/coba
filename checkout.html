@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout | SparXParts</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">
+        <img class="logo-mark" src="assets/logo-removebg-preview.png" alt="SparXParts logo" />
+        <span class="logo-word">SparXParts</span>
+      </div>
+      <div class="nav-actions">
+        <a class="btn ghost" href="index.html">Kembali</a>
+      </div>
+    </nav>
+  </header>
+
+  <main style="max-width: 960px; margin: 40px auto; padding: 0 24px; display: grid; gap: 18px;">
+    <section class="build-panels">
+      <div class="section-title" style="margin-bottom:12px;">
+        <h2>Ringkasan Pesanan</h2>
+        <small class="muted" data-checkout-time></small>
+      </div>
+      <div class="cart-body" data-checkout-items>
+        <p class="muted">Memuat data checkout...</p>
+      </div>
+      <div class="cart-summary" style="margin-top:12px;">
+        <div class="summary-row">
+          <span>Subtotal</span><strong data-co-subtotal>Rp 0</strong>
+        </div>
+        <div class="summary-row muted">
+          <span>Diskon</span><strong data-co-discount>Rp 0</strong>
+        </div>
+        <div class="summary-row muted">
+          <span>Ongkir</span><strong data-co-shipping>Rp 0</strong>
+        </div>
+        <div class="summary-row muted">
+          <span>Biaya admin</span><strong data-co-admin>Rp 0</strong>
+        </div>
+        <div class="summary-row total">
+          <span>Total akhir</span><strong data-co-total>Rp 0</strong>
+        </div>
+        <div class="summary-row muted">
+          <span>Kode promo</span><strong data-co-promo>-</strong>
+        </div>
+        <div class="summary-row muted">
+          <span>Metode bayar</span><strong data-co-method>-</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="build-panels">
+      <div class="section-title" style="margin-bottom:12px;">
+        <h2>Informasi Pembayaran</h2>
+      </div>
+      <p class="muted">Status: <strong>Menunggu pembayaran</strong></p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="btn ghost" href="index.html">Kembali ke keranjang</a>
+        <button class="btn" data-confirm-pay>Konfirmasi & Bayar</button>
+      </div>
+      <small class="promo-status" data-pay-status></small>
+    </section>
+  </main>
+
+  <script>
+    const CHECKOUT_KEY = "sparxparts_checkout";
+    const CART_KEY = "sparxparts_cart";
+    const PROMO_KEY = "sparxparts_promo";
+    const OPEN_CART_KEY = "sparxparts_open_cart";
+    const formatCurrency = (v) => `Rp ${v.toLocaleString("id-ID")}`;
+
+    const promoConfigs = {
+      NGAWI: {
+        validate: (cart, subtotal) =>
+          cart.length ? { valid: true } : { valid: false, reason: "Keranjang kosong" },
+        discount: (subtotal) => 0.1 * subtotal,
+      },
+      FARISKEREN: {
+        validate: () => ({ valid: true }),
+        discount: (subtotal, shipping) => Math.min(20000, subtotal + shipping),
+      },
+      OWIKUN: {
+        validate: (cart, subtotal) =>
+          cart.length ? { valid: true } : { valid: false, reason: "Keranjang kosong" },
+        discount: (subtotal) => Math.min(subtotal * 0.5, 100000),
+      },
+      OWOKUN: {
+        validate: (cart) =>
+          cart.some((i) => i.category === "gpu")
+            ? { valid: true }
+            : { valid: false, reason: "Harus ada produk kategori GPU" },
+        discount: (subtotal) => 0.05 * subtotal,
+      },
+      HABIBDECUL: {
+        validate: (cart, subtotal) =>
+          subtotal >= 5000000
+            ? { valid: true }
+            : { valid: false, reason: "Minimal belanja Rp 5.000.000" },
+        discount: () => 50000,
+      },
+    };
+
+    const calculateSubtotal = (cart) =>
+      cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+    const calculateShipping = (subtotal) => (subtotal >= 2000000 ? 0 : 25000);
+    const calculateFees = (subtotal, method) => {
+      if (subtotal <= 0) return 0;
+      if (method === "cod") return 10000;
+      if (method === "kartu") return Math.round(subtotal * 0.02);
+      if (method === "ewallet") return 5000;
+      return 0;
+    };
+    const validatePromo = (code, cart, subtotal) => {
+      const promo = promoConfigs[code];
+      if (!promo) return { valid: false, reason: "Kode tidak dikenal" };
+      return promo.validate(cart, subtotal);
+    };
+    const calculateDiscount = (code, cart, subtotal, shipping) => {
+      const promo = promoConfigs[code];
+      if (!promo) return 0;
+      const disc = promo.discount(subtotal, shipping, cart);
+      return Math.min(disc, subtotal + shipping);
+    };
+
+    const parseData = () => {
+      const raw = localStorage.getItem(CHECKOUT_KEY);
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          if (parsed && parsed.items && parsed.items.length) return parsed;
+        } catch {}
+      }
+      const cartRaw = localStorage.getItem(CART_KEY);
+      if (!cartRaw) return null;
+      let cart;
+      try {
+        cart = JSON.parse(cartRaw);
+      } catch {
+        return null;
+      }
+      if (!Array.isArray(cart) || !cart.length) return null;
+      const promoCode = (localStorage.getItem(PROMO_KEY) || "").trim().toUpperCase();
+      const subtotal = calculateSubtotal(cart);
+      const shipping = calculateShipping(subtotal);
+      let discount = 0;
+      if (promoCode) {
+        const validation = validatePromo(promoCode, cart, subtotal);
+        if (validation.valid) discount = calculateDiscount(promoCode, cart, subtotal, shipping);
+      }
+      const paymentMethod = "transfer";
+      const adminFee = calculateFees(subtotal, paymentMethod);
+      const total = Math.max(0, subtotal + shipping + adminFee - discount);
+      return {
+        items: cart,
+        subtotal,
+        discount,
+        shipping,
+        adminFee,
+        paymentMethod,
+        promoCode,
+        total,
+        timestamp: Date.now(),
+      };
+    };
+
+    const data = parseData();
+    if (!data) {
+      alert("Data checkout tidak ditemukan, kembali ke halaman utama.");
+      window.location.href = "index.html";
+    }
+
+    const itemsEl = document.querySelector("[data-checkout-items]");
+    if (data.items && data.items.length) {
+      itemsEl.innerHTML = data.items
+        .map(
+          (item) => `
+        <div class="cart-item">
+          <img src="${item.img || ""}" alt="${item.alt || item.title || ""}" loading="lazy" />
+          <div>
+            <h4>${item.title}</h4>
+            <div class="muted">${item.desc || ""}</div>
+            <div class="muted">Qty: ${item.qty}</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="muted">${formatCurrency(item.price)} / item</div>
+            <strong>${formatCurrency(item.price * item.qty)}</strong>
+          </div>
+        </div>
+      `
+        )
+        .join("");
+    } else {
+      itemsEl.innerHTML = '<p class="muted">Data checkout tidak ditemukan.</p>';
+    }
+
+    document.querySelector("[data-checkout-time]").textContent = new Date(
+      data.timestamp
+    ).toLocaleString("id-ID");
+    document.querySelector("[data-co-subtotal]").textContent = formatCurrency(data.subtotal || 0);
+    document.querySelector("[data-co-discount]").textContent = `- ${formatCurrency(data.discount || 0)}`;
+    document.querySelector("[data-co-shipping]").textContent = formatCurrency(data.shipping || 0);
+    document.querySelector("[data-co-admin]").textContent = formatCurrency(data.adminFee || 0);
+    document.querySelector("[data-co-total]").textContent = formatCurrency(data.total || 0);
+    document.querySelector("[data-co-promo]").textContent = data.promoCode || "-";
+    document.querySelector("[data-co-method]").textContent = (data.paymentMethod || "-").toUpperCase();
+
+    const payStatus = document.querySelector("[data-pay-status]");
+    document.querySelector("[data-confirm-pay]").addEventListener("click", () => {
+      payStatus.textContent = "Pembayaran berhasil (simulasi).";
+      payStatus.classList.remove("error");
+      payStatus.classList.add("success");
+      localStorage.removeItem(CHECKOUT_KEY);
+      localStorage.removeItem(CART_KEY);
+      localStorage.removeItem(PROMO_KEY);
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 900);
+    });
+
+    document.querySelectorAll('a[href="index.html"]').forEach((el) => {
+      el.addEventListener("click", () => {
+        localStorage.setItem(OPEN_CART_KEY, "true");
+      });
+    });
+  </script>
+</body>
+</html>
