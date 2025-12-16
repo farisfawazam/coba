@@ -425,8 +425,33 @@
         </div>
         <div class="cart-summary">
             <div class="summary-row">
-                <span>Total</span>
-                <strong data-cart-total>Rp 0</strong>
+                <span>Subtotal</span>
+                <strong data-cart-subtotal>Rp 0</strong>
+            </div>
+            <div class="summary-row muted">
+                <span>Diskon</span>
+                <strong data-cart-discount>Rp 0</strong>
+            </div>
+            <div class="summary-row muted">
+                <span>Biaya admin</span>
+                <strong data-cart-admin>Rp 0</strong>
+            </div>
+            <div class="summary-row muted">
+                <span>Ongkir</span>
+                <strong data-cart-shipping>Rp 0</strong>
+            </div>
+            <div class="summary-row total">
+                <span>Total akhir</span>
+                <strong data-cart-grand>Rp 0</strong>
+            </div>
+            <div class="promo-box">
+                <label for="promo-input" class="muted">Promo</label>
+                <div class="promo-row">
+                    <input id="promo-input" type="text" placeholder="Masukkan kode promo" data-promo-input />
+                    <button class="btn ghost" data-promo-apply disabled>Pakai</button>
+                    <button class="btn ghost danger" data-promo-remove style="display:none;">Hapus</button>
+                </div>
+                <small class="promo-status" data-promo-status></small>
             </div>
             <label for="payment-method" class="muted">Metode bayar</label>
             <select id="payment-method" data-payment>
