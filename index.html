@@ -411,6 +411,23 @@
         </section>
     </main>
 
+    <!-- Pop-up jumlah item sebelum masuk keranjang -->
+    <div class="qty-modal" data-qty-modal aria-hidden="true">
+        <div class="qty-modal__backdrop" data-qty-dismiss></div>
+        <div class="qty-modal__card">
+            <h4>Tambah ke keranjang</h4>
+            <p class="muted">Mau berapa item yang ditambahkan?</p>
+            <div class="qty-input-row">
+                <label for="qty-input">Jumlah</label>
+                <input id="qty-input" type="number" min="1" value="1" data-qty-input />
+            </div>
+            <div class="modal-actions">
+                <button class="btn ghost" data-qty-dismiss>Batal</button>
+                <button class="btn" data-qty-confirm>Tambah</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Panel keranjang + overlay -->
     <div class="cart-overlay" data-cart-overlay></div>
     <aside class="cart-panel" data-cart-panel aria-hidden="true">

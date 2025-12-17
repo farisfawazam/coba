@@ -363,6 +363,12 @@ const promoInput = document.querySelector("[data-promo-input]");
 const promoApplyBtn = document.querySelector("[data-promo-apply]");
 const promoRemoveBtn = document.querySelector("[data-promo-remove]");
 const promoStatusEl = document.querySelector("[data-promo-status]");
+// Modal qty
+const qtyModal = document.querySelector("[data-qty-modal]");
+const qtyInput = document.querySelector("[data-qty-input]");
+const qtyConfirm = document.querySelector("[data-qty-confirm]");
+const qtyDismissEls = document.querySelectorAll("[data-qty-dismiss]");
+let pendingProductId = null;
 
 // Hitung dan render badge jumlah item di tombol cart
 const updateCartCount = () => {
@@ -424,16 +430,22 @@ const closeCart = () => {
 };
 
 // Tambah item ke cart; jika sudah ada, hanya increment qty
-const addToCart = (id) => {
+const addToCart = (id, qty = 1) => {
   const product = products.find((p) => p.id === id);
   if (!product) return;
   const existing = cart.find((item) => item.id === id);
-  if (existing) existing.qty += 1;
-  else cart.push({ ...product, qty: 1 });
+  const addQty = Math.max(1, Math.floor(qty));
+  if (existing) existing.qty += addQty;
+  else cart.push({ ...product, qty: addQty });
   saveCart();
   renderCart();
-  openCart();
-  showToast(`${product.title} ditambahkan ke keranjang`);
+  showToast(`${product.title} (+${addQty}) ditambahkan ke keranjang`);
+  const badge = document.querySelector(".cart-count");
+  if (badge) {
+    badge.classList.remove("pulse");
+    void badge.offsetWidth; // reflow untuk reset animasi
+    badge.classList.add("pulse");
+  }
 };
 
 // Adjust qty (+/-) dan hapus jika qty <= 0
@@ -458,7 +470,13 @@ productCards.forEach((card) => {
   const btn = card.querySelector("[data-add-to-cart]");
   const id = card.dataset.productId;
   if (btn && id) {
-    btn.addEventListener("click", () => addToCart(id));
+    btn.addEventListener("click", () => {
+      pendingProductId = id;
+      if (qtyInput) qtyInput.value = "1";
+      qtyModal?.classList.add("open");
+      qtyModal?.setAttribute("aria-hidden", "false");
+      qtyInput?.focus();
+    });
   }
 });
 
@@ -477,6 +495,37 @@ cartItemsEl?.addEventListener("click", (evt) => {
   if (decBtn) changeQty(decBtn.dataset.cartDec, -1);
   if (incBtn) changeQty(incBtn.dataset.cartInc, 1);
   if (rmBtn) removeItem(rmBtn.dataset.cartRemove);
+});
+
+// Modal qty handlers
+const closeQtyModal = () => {
+  pendingProductId = null;
+  qtyModal?.classList.remove("open");
+  qtyModal?.setAttribute("aria-hidden", "true");
+};
+
+qtyDismissEls.forEach((el) =>
+  el.addEventListener("click", () => {
+    closeQtyModal();
+  })
+);
+
+qtyConfirm?.addEventListener("click", () => {
+  if (!pendingProductId) {
+    closeQtyModal();
+    return;
+  }
+  const qtyVal = Math.max(1, Math.floor(Number(qtyInput?.value || 1)));
+  addToCart(pendingProductId, qtyVal);
+  closeQtyModal();
+});
+
+qtyModal?.addEventListener("click", (evt) => {
+  if (evt.target === qtyModal) closeQtyModal();
+});
+
+document.addEventListener("keydown", (evt) => {
+  if (evt.key === "Escape") closeQtyModal();
 });
 
 checkoutBtn?.addEventListener("click", () => {

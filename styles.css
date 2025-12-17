@@ -169,6 +169,23 @@ nav a:hover {
   font-size: 12px;
 }
 
+/* Efek pulse pada badge cart saat item ditambahkan */
+.cart-count.pulse {
+  animation: cartPulse 0.35s ease;
+}
+
+@keyframes cartPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .text-link {
   color: var(--text);
   text-decoration: none;
@@ -1089,6 +1106,65 @@ footer {
 
 .toast.error {
   border-color: rgba(255, 80, 80, 0.7);
+}
+
+/* Modal input qty */
+.qty-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: none;
+}
+
+.qty-modal.open {
+  display: block;
+}
+
+.qty-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.qty-modal__card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: min(360px, 90vw);
+  background: rgba(17, 25, 46, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  display: grid;
+  gap: 12px;
+}
+
+.qty-input-row {
+  display: grid;
+  gap: 6px;
+}
+
+.qty-input-row input {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+@media (max-width: 540px) {
+  .qty-modal__card {
+    min-width: 92vw;
+  }
 }
 
 @media (max-width: 720px) {
