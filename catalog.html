@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Katalog Produk | SparXParts</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-catalog="all">
+  <!-- Bar promo -->
+  <div class="promo-bar">Gratis ongkir + garansi tukar 7 hari untuk order minggu ini.</div>
+  <header>
+    <nav>
+      <div class="logo">
+        <img class="logo-mark" src="assets/logo-removebg-preview.png" alt="SparXParts logo" />
+        <span class="logo-word">SparXParts</span>
+      </div>
+      <ul>
+        <li><a href="index.html#produk">Produk</a></li>
+        <li><a href="index.html#promo">Promo</a></li>
+        <li><a href="index.html#kontak">Kontak</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn cart-trigger" data-cart-toggle aria-expanded="false">
+          <svg class="cart-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M3 4h2l1.6 9.2a2 2 0 0 0 2 1.8h7.8a2 2 0 0 0 2-1.6l1-5.4H7.1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="10" cy="19" r="1.3" />
+            <circle cx="17" cy="19" r="1.3" />
+          </svg>
+          Keranjang
+          <span class="cart-count" data-cart-count>0</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main style="max-width: 1200px; margin: 40px auto; padding: 0 24px; display: grid; gap: 18px;">
+    <section id="produk" class="products">
+      <div class="section-title">
+        <h2>Katalog produk</h2>
+        <div class="section-actions">
+          <a class="text-link" href="index.html" data-show-featured>Kembali ke unggulan</a>
+        </div>
+      </div>
+      <div class="filter-bar fade-up">
+        <div class="filter-top">
+          <div>
+            <small class="muted">Filter per kategori</small>
+          </div>
+          <div class="filter-controls">
+            <input type="search" placeholder="Cari produk..." data-search-input aria-label="Cari produk" />
+            <select class="select-modern" data-sort aria-label="Urutkan produk">
+              <option value="default">Urutkan</option>
+              <option value="price-asc">Harga termurah</option>
+              <option value="price-desc">Harga termahal</option>
+              <option value="name-asc">Nama A-Z</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-pills" role="tablist">
+          <button class="filter-pill active" data-filter="all" aria-pressed="true">Semua</button>
+          <button class="filter-pill" data-filter="motherboard" aria-pressed="false">Motherboard</button>
+          <button class="filter-pill" data-filter="cpu" aria-pressed="false">CPU</button>
+          <button class="filter-pill" data-filter="ram" aria-pressed="false">RAM</button>
+          <button class="filter-pill" data-filter="gpu" aria-pressed="false">GPU</button>
+          <button class="filter-pill" data-filter="storage" aria-pressed="false">Storage</button>
+          <button class="filter-pill" data-filter="cooling" aria-pressed="false">Cooling</button>
+          <button class="filter-pill" data-filter="psu" aria-pressed="false">PSU</button>
+          <button class="filter-pill" data-filter="peripheral" aria-pressed="false">Peripheral</button>
+          <button class="filter-pill" data-filter="monitor" aria-pressed="false">Monitor</button>
+          <button class="filter-pill" data-filter="accessory" aria-pressed="false">Aksesori</button>
+        </div>
+      </div>
+      <div class="grid products-grid">
+        <!-- Reuse produk dari landing (tetap dari DOM, tidak hardcode di JS) -->
+        <div class="product fade-up" data-category="motherboard" data-featured="true">
+          <div class="product-thumb">
+            <img src="assets/mobo.jpeg" alt="Motherboard B650 WiFi" loading="lazy" />
+          </div>
+          <strong>Motherboard B650 WiFi</strong>
+          <div class="price">Rp 3.250.000</div>
+          <small>Socket AM4 - DDR4</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="ram" data-featured="true">
+          <div class="product-thumb">
+            <img src="assets/Ram.jpeg" alt="DDR5 32GB 6000MHz" loading="lazy" />
+          </div>
+          <strong>DDR5 32GB 6000MHz</strong>
+          <div class="price">Rp 1.799.000</div>
+          <small>Dual channel kit - RGB</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="psu">
+          <div class="product-thumb">
+            <img src="assets/psu.jpeg" alt="PSU 750W 80+ Gold" loading="lazy" />
+          </div>
+          <strong>PSU 750W 80+ Gold</strong>
+          <div class="price">Rp 1.350.000</div>
+          <small>Modular - 10 tahun garansi</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="cooling">
+          <div class="product-thumb">
+            <img src="assets/aio cooler.jpeg" alt="AIO Liquid Cooler 360mm" loading="lazy" />
+          </div>
+          <strong>AIO Liquid Cooler 360mm</strong>
+          <div class="price">Rp 1.899.000</div>
+          <small>ARGB - Pump gen4</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="gpu" data-featured="true">
+          <div class="product-thumb">
+            <img src="assets/GPU.jpeg" alt="NVIDIA RTX 5090" loading="lazy" />
+          </div>
+          <strong>NVIDIA RTX 5090</strong>
+          <div class="price">Rp 57.999.000</div>
+          <small>32GB GDDR7 - Quad Fan Cooling</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="cpu" data-featured="true">
+          <div class="product-thumb">
+            <img src="assets/cpu.jpeg" alt="Ryzen 5 5600g" loading="lazy" />
+          </div>
+          <strong>Ryzen 5 5600g</strong>
+          <div class="price">Rp 2.497.000</div>
+          <small>6 Cores 12 Threads - 4.4 GHZ</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="storage">
+          <div class="product-thumb">
+            <img src="assets/ssd.png" alt="SSD 1TB" loading="lazy" />
+          </div>
+          <strong>SSD 1TB</strong>
+          <div class="price">Rp 3.100.000</div>
+          <small>600 TBW - Gen 4</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="cooling">
+          <div class="product-thumb">
+            <img src="assets/fan case.jpg" alt="Fan Case" loading="lazy" />
+          </div>
+          <strong>Fan Case</strong>
+          <div class="price">Rp 510.000</div>
+          <small>Use Magnet - ARGB</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="peripheral">
+          <div class="product-thumb">
+            <img src="assets/keyboard.jpg" alt="Keyboard" loading="lazy" />
+          </div>
+          <strong>Keyboard</strong>
+          <div class="price">Rp 3.299.000</div>
+          <small>Limited Edition - IP57</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="monitor">
+          <div class="product-thumb">
+            <img src="assets/Monitor.jpg" alt="Monitor" loading="lazy" />
+          </div>
+          <strong>Monitor 27&quot; 270Hz</strong>
+          <div class="price">Rp 17.389.000</div>
+          <small>270 Hz - DCI P-3 97%</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="accessory">
+          <div class="product-thumb">
+            <img src="assets/DeksMat.jpeg" alt="DeksMat" loading="lazy" />
+          </div>
+          <strong>DeksMat</strong>
+          <div class="price">Rp 500.000</div>
+          <small>Rubber bottom - Water-proof surface</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="peripheral">
+          <div class="product-thumb">
+            <img src="assets/Mouse.jpeg" alt="Mouse" loading="lazy" />
+          </div>
+          <strong>Mouse</strong>
+          <div class="price">Rp 1.249.000</div>
+          <small>Wireless - 24000 DPI</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+      </div>
+      <div class="products-empty" data-products-empty style="display:none;">
+        <p class="muted">Tidak ada produk ditemukan untuk filter/pencarian ini.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Pop-up jumlah item sebelum masuk keranjang -->
+  <div class="qty-modal" data-qty-modal aria-hidden="true">
+    <div class="qty-modal__backdrop" data-qty-dismiss></div>
+    <div class="qty-modal__card">
+      <h4>Tambah ke keranjang</h4>
+      <p class="muted">Mau berapa item yang ditambahkan?</p>
+      <div class="qty-input-row">
+        <label for="qty-input">Jumlah</label>
+        <input id="qty-input" type="number" min="1" value="1" data-qty-input />
+      </div>
+      <div class="modal-actions">
+        <button class="btn ghost" data-qty-dismiss>Batal</button>
+        <button class="btn" data-qty-confirm>Tambah</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel keranjang + overlay -->
+  <div class="cart-overlay" data-cart-overlay></div>
+  <aside class="cart-panel" data-cart-panel aria-hidden="true">
+    <div class="cart-header">
+      <div>
+        <small class="muted">Belanjaan Anda</small>
+        <h3>Keranjang</h3>
+      </div>
+      <button class="icon-btn" data-cart-close aria-label="Tutup keranjang">A-</button>
+    </div>
+    <div class="cart-body" data-cart-items>
+      <p class="muted">Keranjang masih kosong. Tambahkan produk untuk checkout.</p>
+    </div>
+    <div class="cart-summary">
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <strong data-cart-subtotal>Rp 0</strong>
+      </div>
+      <div class="summary-row muted">
+        <span>Diskon</span>
+        <strong data-cart-discount>Rp 0</strong>
+      </div>
+      <div class="summary-row muted">
+        <span>Biaya admin</span>
+        <strong data-cart-admin>Rp 0</strong>
+      </div>
+      <div class="summary-row muted">
+        <span>Ongkir</span>
+        <strong data-cart-shipping>Rp 0</strong>
+      </div>
+      <div class="summary-row total">
+        <span>Total akhir</span>
+        <strong data-cart-grand>Rp 0</strong>
+      </div>
+      <div class="promo-box">
+        <label for="promo-input" class="muted">Promo</label>
+        <div class="promo-row">
+          <input id="promo-input" type="text" placeholder="Masukkan kode promo" data-promo-input />
+          <button class="btn ghost" data-promo-apply disabled>Pakai</button>
+          <button class="btn ghost danger" data-promo-remove style="display:none;">Hapus</button>
+        </div>
+        <small class="promo-status" data-promo-status></small>
+      </div>
+      <label for="payment-method" class="muted">Metode bayar</label>
+      <select class="select-modern" id="payment-method" data-payment>
+        <option value="cod">COD / Bayar di tempat</option>
+        <option value="transfer">Transfer bank</option>
+        <option value="qris">QRIS</option>
+        <option value="ewallet">E-Wallet</option>
+      </select>
+      <button class="btn full" data-checkout>Checkout</button>
+    </div>
+  </aside>
+
+  <!-- Footer ringkas -->
+  <footer id="kontak">
+    <p>SparXParts - Komponen asli, dikirim cepat.</p>
+    <small>support@sparxparts.id | 021-555-1234</small>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

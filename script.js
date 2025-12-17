@@ -36,12 +36,24 @@ const products = productCards.map((card, idx) => {
   const img = imgEl?.getAttribute("src") || "";
   const alt = imgEl?.getAttribute("alt") || title;
   const category = card.dataset.category || "other";
+  const featured = card.dataset.featured === "true";
   const id = card.dataset.productId || `prod-${idx + 1}`;
   card.dataset.productId = id;
   const addBtn = card.querySelector(".btn");
   if (addBtn) addBtn.dataset.addToCart = id;
   const searchText = `${title} ${desc}`.toLowerCase();
-  return { id, title, priceText, price, desc, img, alt, category, searchText };
+  return {
+    id,
+    title,
+    priceText,
+    price,
+    desc,
+    img,
+    alt,
+    category,
+    featured,
+    searchText,
+  };
 });
 
 const productGrid = document.querySelector(".products-grid");
@@ -51,18 +63,42 @@ productCards.forEach((card) => {
   if (id) productMap.set(id, card);
 });
 
-// State filter/sort
+// State filter/sort + mode (featured vs all)
 let activeCategory = "all";
 let searchQuery = "";
 let sortMode = "default";
+const isCatalogPage = document.body.dataset.catalog === "all";
+let showMode = isCatalogPage ? "all" : "featured";
+const showAllLink = document.querySelector("[data-show-all]");
+const showFeaturedLink = document.querySelector("[data-show-featured]");
+const emptyStateEl = document.querySelector("[data-products-empty]");
 
 // Filter produk per kategori + pencarian + sorting
 const filterButtons = document.querySelectorAll("[data-filter]");
 const searchInput = document.querySelector("[data-search-input]");
 const sortSelect = document.querySelector("[data-sort]");
 
-const applyFiltersAndSort = () => {
-  const filtered = products
+// Featured list: pakai data-featured, fallback 2 pertama per kategori
+const computeFeatured = () => {
+  const byCat = products.reduce((acc, p) => {
+    if (!acc[p.category]) acc[p.category] = [];
+    acc[p.category].push(p);
+    return acc;
+  }, {});
+  const list = [];
+  Object.values(byCat).forEach((arr) => {
+    const marked = arr.filter((p) => p.featured);
+    if (marked.length) list.push(...marked);
+    else list.push(...arr.slice(0, 2));
+  });
+  return list;
+};
+
+const featuredProducts = computeFeatured();
+
+const renderProducts = () => {
+  const source = showMode === "all" ? products : featuredProducts;
+  const filtered = source
     .filter((p) => {
       const categoryMatch =
         activeCategory === "all" || p.category === activeCategory;
@@ -82,12 +118,15 @@ const applyFiltersAndSort = () => {
     card?.classList.toggle("hide", !matched);
   });
 
-  // Reorder DOM sesuai hasil sorting yang terfilter
   if (productGrid) {
     filtered.forEach((p) => {
       const card = productMap.get(p.id);
       if (card) productGrid.appendChild(card);
     });
+  }
+
+  if (emptyStateEl) {
+    emptyStateEl.style.display = filtered.length ? "none" : "block";
   }
 };
 
@@ -99,38 +138,56 @@ filterButtons.forEach((btn) => {
       button.classList.toggle("active", isActive);
       button.setAttribute("aria-pressed", isActive ? "true" : "false");
     });
-    applyFiltersAndSort();
+    renderProducts();
   });
 });
 
 searchInput?.addEventListener("input", (evt) => {
   searchQuery = evt.target.value.trim().toLowerCase();
-  applyFiltersAndSort();
+  renderProducts();
 });
 
 sortSelect?.addEventListener("change", (evt) => {
   sortMode = evt.target.value;
-  applyFiltersAndSort();
+  renderProducts();
 });
 
-// Link "Lihat semua" sebagai reset filter
-const showAllLink = document.querySelector(".section-title .text-link");
-if (showAllLink) {
+const resetFilters = () => {
+  const allBtn = document.querySelector('[data-filter="all"]');
+  if (allBtn) allBtn.click();
+  if (searchInput) {
+    searchInput.value = "";
+    searchQuery = "";
+  }
+  if (sortSelect) {
+    sortSelect.value = "default";
+    sortMode = "default";
+  }
+};
+
+const setMode = (mode) => {
+  showMode = mode;
+  if (showAllLink && showAllLink.getAttribute("href") === "#")
+    showAllLink.style.display = mode === "featured" ? "inline-flex" : "none";
+  if (showFeaturedLink && showFeaturedLink.getAttribute("href") === "#")
+    showFeaturedLink.style.display = mode === "all" ? "inline-flex" : "none";
+  renderProducts();
+  const grid = document.querySelector(".products-grid");
+  if (grid) grid.scrollIntoView({ behavior: "smooth", block: "start" });
+};
+
+if (showAllLink && showAllLink.getAttribute("href") === "#") {
   showAllLink.addEventListener("click", (evt) => {
     evt.preventDefault();
-    const allBtn = document.querySelector('[data-filter="all"]');
-    if (allBtn) allBtn.click();
-    if (searchInput) {
-      searchInput.value = "";
-      searchQuery = "";
-    }
-    if (sortSelect) {
-      sortSelect.value = "default";
-      sortMode = "default";
-    }
-    applyFiltersAndSort();
-    const grid = document.querySelector(".products-grid");
-    if (grid) grid.scrollIntoView({ behavior: "smooth", block: "start" });
+    setMode("all");
+  });
+}
+
+if (showFeaturedLink && showFeaturedLink.getAttribute("href") === "#") {
+  showFeaturedLink.addEventListener("click", (evt) => {
+    evt.preventDefault();
+    resetFilters();
+    setMode("featured");
   });
 }
 
@@ -664,4 +721,4 @@ document.addEventListener("click", (evt) => {
 
 loadWishlist();
 syncWishlistUI();
-applyFiltersAndSort();
+renderProducts();
