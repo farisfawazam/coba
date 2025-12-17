@@ -150,7 +150,7 @@ const showToast = (message, type = "success") => {
 // Util format Rupiah
 const formatCurrency = (value) => `Rp ${value.toLocaleString("id-ID")}`;
 
-// State keranjang
+// --- State keranjang & penyimpanan lokal (persist antar reload) ---
 const CART_KEY = "sparxparts_cart";
 const PROMO_KEY = "sparxparts_promo";
 const CHECKOUT_KEY = "sparxparts_checkout";
@@ -165,6 +165,7 @@ let lastTotals = {
   grand: 0,
 };
 
+// Ambil cart tersimpan dari localStorage; fallback array kosong jika gagal parse
 const loadCart = () => {
   try {
     const raw = localStorage.getItem(CART_KEY);
@@ -176,6 +177,7 @@ const loadCart = () => {
 
 const saveCart = () => localStorage.setItem(CART_KEY, JSON.stringify(cart));
 const savePromo = () => localStorage.setItem(PROMO_KEY, activePromoCode || "");
+// Ambil promo tersimpan agar kode promo tetap konsisten antar sesi
 const loadPromo = () => {
   try {
     const stored = localStorage.getItem(PROMO_KEY);
@@ -186,7 +188,7 @@ const loadPromo = () => {
   }
 };
 
-// Konfigurasi promo
+// Konfigurasi promo: label, validasi, dan formula diskon
 const promoConfigs = {
   NGAWI: {
     label: "Diskon 10%",
@@ -227,9 +229,11 @@ const promoConfigs = {
   },
 };
 
+// Hitung subtotal sederhana dari semua item x qty
 const calculateSubtotal = (cart) =>
   cart.reduce((acc, item) => acc + item.price * item.qty, 0);
 
+// Ongkir gratis jika subtotal >= 2jt, jika tidak dikenakan flat
 const calculateShipping = (subtotal) => {
   if (subtotal <= 0) return 0;
   return subtotal >= 2000000 ? 0 : 25000;
@@ -238,17 +242,19 @@ const calculateShipping = (subtotal) => {
 const calculateFees = (subtotal, method) => {
   if (subtotal <= 0) return 0;
   if (method === "cod") return 10000;
-  if (method === "kartu") return Math.round(subtotal * 0.02);
   if (method === "ewallet") return 5000;
+  if (method === "qris") return Math.round(subtotal * 0.007); // 0.7% MDR QRIS
   return 0;
 };
 
+// Cek promo ada + lolos syarat
 const validatePromo = (code, cart, subtotal) => {
   const promo = promoConfigs[code];
   if (!promo) return { valid: false, reason: "Kode tidak dikenal" };
   return promo.validate(cart, subtotal);
 };
 
+// Hitung diskon + batasi maksimal total belanja (termasuk ongkir)
 const calculateDiscount = (code, cart, subtotal, shipping) => {
   const promo = promoConfigs[code];
   if (!promo) return 0;
@@ -257,6 +263,7 @@ const calculateDiscount = (code, cart, subtotal, shipping) => {
   return Math.min(discount, cap);
 };
 
+// Kalkulasi ulang semua angka ringkasan (subtotal, ongkir, admin, diskon, grand total)
 const calculateTotals = () => {
   const subtotal = calculateSubtotal(cart);
   const shipping = calculateShipping(subtotal);
@@ -357,11 +364,13 @@ const promoApplyBtn = document.querySelector("[data-promo-apply]");
 const promoRemoveBtn = document.querySelector("[data-promo-remove]");
 const promoStatusEl = document.querySelector("[data-promo-status]");
 
+// Hitung dan render badge jumlah item di tombol cart
 const updateCartCount = () => {
   const count = cart.reduce((acc, item) => acc + item.qty, 0);
   if (cartCountEl) cartCountEl.textContent = count;
 };
 
+// Render isi keranjang (list item + qty control) atau state kosong
 const renderCart = () => {
   if (!cartItemsEl) return;
   if (!cart.length) {
@@ -399,6 +408,7 @@ const renderCart = () => {
   calculateTotals();
 };
 
+// Buka/tutup panel keranjang
 const openCart = () => {
   cartPanel?.classList.add("open");
   cartOverlay?.classList.add("show");
@@ -413,6 +423,7 @@ const closeCart = () => {
   cartToggle?.setAttribute("aria-expanded", "false");
 };
 
+// Tambah item ke cart; jika sudah ada, hanya increment qty
 const addToCart = (id) => {
   const product = products.find((p) => p.id === id);
   if (!product) return;
@@ -425,6 +436,7 @@ const addToCart = (id) => {
   showToast(`${product.title} ditambahkan ke keranjang`);
 };
 
+// Adjust qty (+/-) dan hapus jika qty <= 0
 const changeQty = (id, delta) => {
   const item = cart.find((i) => i.id === id);
   if (!item) return;
@@ -434,6 +446,7 @@ const changeQty = (id, delta) => {
   renderCart();
 };
 
+// Hapus item dari cart
 const removeItem = (id) => {
   cart = cart.filter((i) => i.id !== id);
   saveCart();

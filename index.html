@@ -200,6 +200,7 @@
                 <a class="text-link" href="#">Lihat semua -></a>
             </div>
             <div class="filter-bar fade-up">
+                <!-- Filter + search + sort untuk katalog produk -->
                 <div class="filter-top">
                     <div>
                         <small class="muted">Filter per kategori</small>
@@ -453,12 +454,13 @@
                 </div>
                 <small class="promo-status" data-promo-status></small>
             </div>
+            <!-- Pilihan metode bayar, dioper ke checkout + hitung biaya admin -->
             <label for="payment-method" class="muted">Metode bayar</label>
             <select class="select-modern" id="payment-method" data-payment>
                 <option value="cod">COD / Bayar di tempat</option>
                 <option value="transfer">Transfer bank</option>
+                <option value="qris">QRIS</option>
                 <option value="ewallet">E-Wallet</option>
-                <option value="kartu">Kartu kredit</option>
             </select>
             <button class="btn full" data-checkout>Checkout</button>
         </div>

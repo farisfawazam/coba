@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Checkout | SparXParts</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
   <header>
     <nav>
@@ -57,8 +59,26 @@
       <div class="section-title" style="margin-bottom:12px;">
         <h2>Informasi Pembayaran</h2>
       </div>
-      <p class="muted">Status: <strong>Menunggu pembayaran</strong></p>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <p class="muted">Status: <strong data-pay-status-text>Menunggu pembayaran</strong></p>
+      <div class="pay-grid">
+        <div class="pay-card">
+          <div class="summary-row">
+            <span>Metode</span><strong data-pay-method-label>-</strong>
+          </div>
+          <div class="summary-row muted">
+            <span>Instruksi</span><strong data-pay-instruction>-</strong>
+          </div>
+          <div class="code-box">
+            <div class="muted">Tujuan pembayaran</div>
+            <div class="code-value" data-pay-destination>-</div>
+          </div>
+          <small class="muted" data-pay-helper></small>
+        </div>
+        <div class="pay-visual" data-pay-visual>
+          <div class="muted">QR / Detail akan muncul di sini</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
         <a class="btn ghost" href="index.html">Kembali ke keranjang</a>
         <button class="btn" data-confirm-pay>Konfirmasi & Bayar</button>
       </div>
@@ -72,6 +92,14 @@
     const PROMO_KEY = "sparxparts_promo";
     const OPEN_CART_KEY = "sparxparts_open_cart";
     const formatCurrency = (v) => `Rp ${v.toLocaleString("id-ID")}`;
+    const paymentLabels = {
+      transfer: "Transfer bank",
+      cod: "COD",
+      qris: "QRIS",
+      ewallet: "E-Wallet",
+    };
+    const formatMethodLabel = (method) =>
+      paymentLabels[method] || (method || "-").toUpperCase();
 
     const promoConfigs = {
       NGAWI: {
@@ -81,7 +109,7 @@
       },
       FARISKEREN: {
         validate: () => ({ valid: true }),
-        discount: (subtotal, shipping) => Math.min(20000, subtotal + shipping),
+        discount: (subtotal, shipping) => Math.min(100000, subtotal + shipping),
       },
       OWIKUN: {
         validate: (cart, subtotal) =>
@@ -110,8 +138,8 @@
     const calculateFees = (subtotal, method) => {
       if (subtotal <= 0) return 0;
       if (method === "cod") return 10000;
-      if (method === "kartu") return Math.round(subtotal * 0.02);
       if (method === "ewallet") return 5000;
+      if (method === "qris") return Math.round(subtotal * 0.007); // 0.7% MDR QRIS
       return 0;
     };
     const validatePromo = (code, cart, subtotal) => {
@@ -132,7 +160,7 @@
         try {
           const parsed = JSON.parse(raw);
           if (parsed && parsed.items && parsed.items.length) return parsed;
-        } catch {}
+        } catch { }
       }
       const cartRaw = localStorage.getItem(CART_KEY);
       if (!cartRaw) return null;
@@ -167,13 +195,23 @@
       };
     };
 
+    // Ambil data checkout dari localStorage; jika hilang, paksa kembali
     const data = parseData();
     if (!data) {
       alert("Data checkout tidak ditemukan, kembali ke halaman utama.");
       window.location.href = "index.html";
     }
 
+    const coMethodEl = document.querySelector("[data-co-method]");
     const itemsEl = document.querySelector("[data-checkout-items]");
+    const payStatus = document.querySelector("[data-pay-status]");
+    const payStatusText = document.querySelector("[data-pay-status-text]");
+    const payMethodLabel = document.querySelector("[data-pay-method-label]");
+    const payInstruction = document.querySelector("[data-pay-instruction]");
+    const payDestination = document.querySelector("[data-pay-destination]");
+    const payHelper = document.querySelector("[data-pay-helper]");
+    const payVisual = document.querySelector("[data-pay-visual]");
+
     if (data.items && data.items.length) {
       itemsEl.innerHTML = data.items
         .map(
@@ -206,13 +244,66 @@
     document.querySelector("[data-co-admin]").textContent = formatCurrency(data.adminFee || 0);
     document.querySelector("[data-co-total]").textContent = formatCurrency(data.total || 0);
     document.querySelector("[data-co-promo]").textContent = data.promoCode || "-";
-    document.querySelector("[data-co-method]").textContent = (data.paymentMethod || "-").toUpperCase();
+    if (coMethodEl) coMethodEl.textContent = formatMethodLabel(data.paymentMethod);
 
-    const payStatus = document.querySelector("[data-pay-status]");
+    // Data dinamis untuk simulasi pembayaran
+    const vaNumber = "3901082321835001";
+    const orderId = `SPX-${Math.floor((data.timestamp || Date.now()) / 1000)}`;
+    const qrisPayload = `https://sparxparts.id/pay?order=${orderId}`;
+
+    // Render tampilan instruksi + tujuan bayar sesuai metode
+    const renderPaymentInfo = () => {
+      const method = data.paymentMethod || "transfer";
+      const label = formatMethodLabel(method);
+      if (payMethodLabel) payMethodLabel.textContent = label;
+      if (coMethodEl) coMethodEl.textContent = label;
+      let destination = "-";
+      let helper = "Gunakan metode pembayaran yang Anda pilih.";
+      let instruction = "Ikuti instruksi pembayaran sesuai metode.";
+      if (payVisual)
+        payVisual.innerHTML = '<div class="muted">QR / Detail akan muncul di sini</div>';
+
+      if (method === "transfer") {
+        destination = vaNumber;
+        helper = "Salin nomor VA lalu bayar lewat m-banking/ATM.";
+        instruction = "Transfer ke virtual account";
+      } else if (method === "qris") {
+        destination = "Scan QR di samping";
+        helper = "QR ini mengarah ke halaman pembayaran SparXParts.";
+        instruction = "Scan QRIS via aplikasi pembayaran";
+        if (payVisual)
+          payVisual.innerHTML = `
+            <div class="qr-box">
+              <img src="assets/QrirSparX.png" alt="QRIS SparXParts" loading="lazy" />
+            </div>
+          `;
+      } else if (method === "cod") {
+        destination = "Bayar saat barang diterima";
+        helper = "Siapkan uang pas untuk memudahkan kurir.";
+        instruction = "Pembayaran di tempat";
+      } else if (method === "ewallet") {
+        destination = "E-Wallet pilihan Anda";
+        helper = "Selesaikan pembayaran sesuai instruksi aplikasi e-wallet.";
+        instruction = "Pembayaran via e-wallet";
+      } else if (method === "kartu") {
+        destination = "Kartu kredit/debit";
+        helper = "Pastikan kartu aktif untuk transaksi online.";
+        instruction = "Pembayaran via kartu";
+      }
+
+      if (payDestination) payDestination.textContent = destination;
+      if (payHelper) payHelper.textContent = helper;
+      if (payInstruction) payInstruction.textContent = instruction;
+    };
+
+    renderPaymentInfo();
+
+    // Tombol simulasi bayar: tampilkan status berhasil lalu clear storage
     document.querySelector("[data-confirm-pay]").addEventListener("click", () => {
       payStatus.textContent = "Pembayaran berhasil (simulasi).";
       payStatus.classList.remove("error");
       payStatus.classList.add("success");
+      if (payStatusText) payStatusText.textContent = "Pembayaran berhasil";
       localStorage.removeItem(CHECKOUT_KEY);
       localStorage.removeItem(CART_KEY);
       localStorage.removeItem(PROMO_KEY);
@@ -228,4 +319,5 @@
     });
   </script>
 </body>
+
 </html>
