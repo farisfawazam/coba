@@ -1169,3 +1169,45 @@ footer {
     position: static;
   }
 }
+
+/* Fine-tune section builder agar tidak terasa sempit di layar kecil */
+@media (max-width: 620px) {
+  .build-panels {
+    padding: 12px;
+  }
+
+  .build-panel-content {
+    gap: 14px;
+  }
+
+  .build-copy h3 {
+    font-size: 20px;
+  }
+
+  .chip-row {
+    gap: 6px;
+    margin: 6px 0;
+  }
+
+  .chip {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .build-tab {
+    padding: 12px 14px;
+  }
+
+  .step-card {
+    padding: 12px;
+  }
+
+  .step {
+    gap: 8px;
+  }
+
+  .step-index {
+    width: 26px;
+    height: 26px;
+  }
+}
