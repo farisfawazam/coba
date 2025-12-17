@@ -1210,4 +1210,22 @@ footer {
     width: 26px;
     height: 26px;
   }
+
+  /* Pusatkan konten builder (review/rekomendasi) di layar kecil */
+  .build-panel-content {
+    text-align: center;
+  }
+
+  .chip-row {
+    justify-content: center;
+  }
+
+  .hero-actions,
+  .build-copy .hero-actions {
+    justify-content: center;
+  }
+
+  .step-card {
+    text-align: left;
+  }
 }
