@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Katalog Produk | SparXParts</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body data-catalog="all">
   <!-- Bar promo -->
   <div class="promo-bar">Gratis ongkir + garansi tukar 7 hari untuk order minggu ini.</div>
@@ -16,14 +18,16 @@
         <span class="logo-word">SparXParts</span>
       </div>
       <ul>
-        <li><a href="index.html#produk">Produk</a></li>
+        <li><a href="index.html">Beranda</a></li>
+        <li><a href="catalog.html">Produk</a></li>
         <li><a href="index.html#promo">Promo</a></li>
         <li><a href="index.html#kontak">Kontak</a></li>
       </ul>
       <div class="nav-actions">
         <button class="btn cart-trigger" data-cart-toggle aria-expanded="false">
           <svg class="cart-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M3 4h2l1.6 9.2a2 2 0 0 0 2 1.8h7.8a2 2 0 0 0 2-1.6l1-5.4H7.1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 4h2l1.6 9.2a2 2 0 0 0 2 1.8h7.8a2 2 0 0 0 2-1.6l1-5.4H7.1" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
             <circle cx="10" cy="19" r="1.3" />
             <circle cx="17" cy="19" r="1.3" />
           </svg>
@@ -181,6 +185,193 @@
           <small>Wireless - 24000 DPI</small>
           <button class="btn">Tambah ke keranjang</button>
         </div>
+        <!-- Placeholder produk dengan SVG agar mudah ditimpa gambar -->
+        <div class="product fade-up" data-category="accessory">
+          <div class="product-thumb">
+            <svg viewBox="0 0 200 140" role="img" aria-label="Placeholder produk">
+              <rect width="200" height="140" rx="12" fill="#0f172a" stroke="#1f2937" stroke-width="3" />
+              <path d="M20 110h160M60 70l25 25 40-60 35 50" stroke="#37d8a7" stroke-width="6" stroke-linecap="round"
+                stroke-linejoin="round" fill="none" />
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9aa5c3" font-size="14"
+                font-family="Arial, sans-serif">Ganti gambar</text>
+            </svg>
+          </div>
+          <strong>Placeholder A</strong>
+          <div class="price">Rp 0</div>
+          <small>Timpa dengan gambar asli</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="gpu">
+          <div class="product-thumb">
+            <svg viewBox="0 0 200 140" role="img" aria-label="Placeholder produk">
+              <rect width="200" height="140" rx="12" fill="#0f172a" stroke="#1f2937" stroke-width="3" />
+              <circle cx="60" cy="70" r="22" fill="none" stroke="#7c3aed" stroke-width="6" />
+              <circle cx="140" cy="70" r="22" fill="none" stroke="#37d8a7" stroke-width="6" />
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9aa5c3" font-size="14"
+                font-family="Arial, sans-serif">Ganti gambar</text>
+            </svg>
+          </div>
+          <strong>Placeholder B</strong>
+          <div class="price">Rp 0</div>
+          <small>Siap diganti foto GPU</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="monitor">
+          <div class="product-thumb">
+            <svg viewBox="0 0 200 140" role="img" aria-label="Placeholder produk">
+              <rect width="200" height="140" rx="12" fill="#0f172a" stroke="#1f2937" stroke-width="3" />
+              <rect x="30" y="30" width="140" height="70" rx="8" fill="none" stroke="#37d8a7" stroke-width="6" />
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9aa5c3" font-size="14"
+                font-family="Arial, sans-serif">Ganti gambar</text>
+            </svg>
+          </div>
+          <strong>Placeholder C</strong>
+          <div class="price">Rp 0</div>
+          <small>Timpa dengan foto monitor</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <!-- Tambahan 10 produk placeholder untuk diisi gambar asli -->
+        <div class="product fade-up" data-category="cpu">
+          <div class="product-thumb">
+            <svg viewBox="0 0 200 140" role="img" aria-label="Placeholder CPU">
+              <rect width="200" height="140" rx="12" fill="#0f172a" stroke="#1f2937" stroke-width="3" />
+              <path d="M60 40h80v60H60z" fill="none" stroke="#7c3aed" stroke-width="6" />
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9aa5c3"
+                font-size="13">CPU</text>
+            </svg>
+          </div>
+          <strong>CPU Placeholder</strong>
+          <div class="price">Rp 0</div>
+          <small>Ganti dengan foto prosesor</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="gpu">
+          <div class="product-thumb">
+            <svg viewBox="0 0 200 140" role="img" aria-label="Placeholder GPU">
+              <rect width="200" height="140" rx="12" fill="#0f172a" stroke="#1f2937" stroke-width="3" />
+              <circle cx="70" cy="70" r="22" fill="none" stroke="#37d8a7" stroke-width="6" />
+              <circle cx="130" cy="70" r="22" fill="none" stroke="#7c3aed" stroke-width="6" />
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9aa5c3"
+                font-size="13">GPU</text>
+            </svg>
+          </div>
+          <strong>GPU Placeholder</strong>
+          <div class="price">Rp 0</div>
+          <small>Ganti dengan foto VGA</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="ram">
+          <div class="product-thumb">
+            <svg viewBox="0 0 200 140" role="img" aria-label="Placeholder RAM">
+              <rect width="200" height="140" rx="12" fill="#0f172a" stroke="#1f2937" stroke-width="3" />
+              <rect x="40" y="60" width="120" height="20" rx="6" fill="none" stroke="#37d8a7" stroke-width="6" />
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9aa5c3"
+                font-size="13">RAM</text>
+            </svg>
+          </div>
+          <strong>RAM Placeholder</strong>
+          <div class="price">Rp 0</div>
+          <small>Isi dengan foto RAM</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="storage">
+          <div class="product-thumb">
+            <svg viewBox="0 0 200 140" role="img" aria-label="Placeholder Storage">
+              <rect width="200" height="140" rx="12" fill="#0f172a" stroke="#1f2937" stroke-width="3" />
+              <rect x="50" y="50" width="100" height="40" rx="8" fill="none" stroke="#7c3aed" stroke-width="6" />
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9aa5c3"
+                font-size="13">SSD/HDD</text>
+            </svg>
+          </div>
+          <strong>Storage Placeholder</strong>
+          <div class="price">Rp 0</div>
+          <small>Ganti dengan foto SSD/HDD</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="psu">
+          <div class="product-thumb">
+            <svg viewBox="0 0 200 140" role="img" aria-label="Placeholder PSU">
+              <rect width="200" height="140" rx="12" fill="#0f172a" stroke="#1f2937" stroke-width="3" />
+              <rect x="55" y="45" width="90" height="50" rx="6" fill="none" stroke="#37d8a7" stroke-width="6" />
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9aa5c3"
+                font-size="13">PSU</text>
+            </svg>
+          </div>
+          <strong>PSU Placeholder</strong>
+          <div class="price">Rp 0</div>
+          <small>Timpa dengan foto PSU</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="cooling">
+          <div class="product-thumb">
+            <svg viewBox="0 0 200 140" role="img" aria-label="Placeholder Cooling">
+              <rect width="200" height="140" rx="12" fill="#0f172a" stroke="#1f2937" stroke-width="3" />
+              <circle cx="100" cy="70" r="30" fill="none" stroke="#37d8a7" stroke-width="6" />
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9aa5c3"
+                font-size="13">Cooling</text>
+            </svg>
+          </div>
+          <strong>Cooling Placeholder</strong>
+          <div class="price">Rp 0</div>
+          <small>Ganti dengan foto kipas/AIO</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="motherboard">
+          <div class="product-thumb">
+            <svg viewBox="0 0 200 140" role="img" aria-label="Placeholder Motherboard">
+              <rect width="200" height="140" rx="12" fill="#0f172a" stroke="#1f2937" stroke-width="3" />
+              <rect x="50" y="40" width="100" height="60" rx="8" fill="none" stroke="#7c3aed" stroke-width="6" />
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9aa5c3"
+                font-size="12">Motherboard</text>
+            </svg>
+          </div>
+          <strong>Mobo Placeholder</strong>
+          <div class="price">Rp 0</div>
+          <small>Isi dengan foto motherboard</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="monitor">
+          <div class="product-thumb">
+            <svg viewBox="0 0 200 140" role="img" aria-label="Placeholder Monitor">
+              <rect width="200" height="140" rx="12" fill="#0f172a" stroke="#1f2937" stroke-width="3" />
+              <rect x="35" y="35" width="130" height="70" rx="8" fill="none" stroke="#37d8a7" stroke-width="6" />
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9aa5c3"
+                font-size="12">Monitor</text>
+            </svg>
+          </div>
+          <strong>Monitor Placeholder</strong>
+          <div class="price">Rp 0</div>
+          <small>Isi dengan foto monitor</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="peripheral">
+          <div class="product-thumb">
+            <svg viewBox="0 0 200 140" role="img" aria-label="Placeholder Peripheral">
+              <rect width="200" height="140" rx="12" fill="#0f172a" stroke="#1f2937" stroke-width="3" />
+              <rect x="60" y="55" width="80" height="30" rx="6" fill="none" stroke="#7c3aed" stroke-width="6" />
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9aa5c3"
+                font-size="12">Peripheral</text>
+            </svg>
+          </div>
+          <strong>Peripheral Placeholder</strong>
+          <div class="price">Rp 0</div>
+          <small>Ganti dengan foto keyboard/mouse</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
+        <div class="product fade-up" data-category="accessory">
+          <div class="product-thumb">
+            <svg viewBox="0 0 200 140" role="img" aria-label="Placeholder Aksesori">
+              <rect width="200" height="140" rx="12" fill="#0f172a" stroke="#1f2937" stroke-width="3" />
+              <rect x="60" y="50" width="80" height="40" rx="8" fill="none" stroke="#37d8a7" stroke-width="6" />
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9aa5c3"
+                font-size="12">Aksesori</text>
+            </svg>
+          </div>
+          <strong>Aksesori Placeholder</strong>
+          <div class="price">Rp 0</div>
+          <small>Timpa dengan foto aksesoris</small>
+          <button class="btn">Tambah ke keranjang</button>
+        </div>
       </div>
       <div class="products-empty" data-products-empty style="display:none;">
         <p class="muted">Tidak ada produk ditemukan untuk filter/pencarian ini.</p>
@@ -267,4 +458,5 @@
 
   <script src="script.js"></script>
 </body>
+
 </html>
